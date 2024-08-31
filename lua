@@ -208,6 +208,14 @@ scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y)
 local isCollapsed = false
 collapseButton.MouseButton1Click:Connect(function()
     isCollapsed = not isCollapsed
-    scrollingFrame.Visible = not isCollapsed
-    collapseButton.Text = isCollapsed and "+" or "-"
+    if isCollapsed then
+        scrollingFrame.Visible = false
+        mainFrame.Size = UDim2.new(0, 350, 0, 30)  -- Collapse to just the title bar height
+        collapseButton.Text = "+"
+    else
+        scrollingFrame.Visible = true
+        mainFrame.Size = UDim2.new(0, 350, 0, 400)  -- Expand back to original size
+        collapseButton.Text = "-"
+    end
 end)
+
