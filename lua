@@ -2,9 +2,10 @@ local player = game.Players.LocalPlayer
 local replicatedStorage = game:GetService("ReplicatedStorage")
 local workspace = game:GetService("Workspace")
 local userInputService = game:GetService("UserInputService")
+local coreGui = game:GetService("CoreGui")
 
 -- Remove previous instances of the GUI
-local previousGUI = player.PlayerGui:FindFirstChild("RemoteEventGUI")
+local previousGUI = coreGui:FindFirstChild("RemoteEventGUI")
 if previousGUI then
     previousGUI:Destroy()
 end
@@ -40,7 +41,7 @@ end
 -- Create the GUI
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "RemoteEventGUI"
-screenGui.Parent = player:WaitForChild("PlayerGui")
+screenGui.Parent = coreGui  -- Parent to CoreGui to persist through deaths
 
 -- Create the main container frame
 local mainFrame = Instance.new("Frame")
@@ -201,14 +202,12 @@ for i, remoteEvent in ipairs(remoteEvents) do
     end)
 end
 
--- Adjust the canvas size based on the total height of all buttons
+-- Adjust the CanvasSize of the ScrollingFrame based on the content size
 scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y)
 
--- Collapse functionality
-local isCollapsed = false
+-- Handle collapse button logic
 collapseButton.MouseButton1Click:Connect(function()
-    isCollapsed = not isCollapsed
-    if isCollapsed then
+    if scrollingFrame.Visible then
         scrollingFrame.Visible = false
         mainFrame.Size = UDim2.new(0, 350, 0, 30)  -- Collapse to just the title bar height
         collapseButton.Text = "+"
@@ -218,4 +217,3 @@ collapseButton.MouseButton1Click:Connect(function()
         collapseButton.Text = "-"
     end
 end)
-
